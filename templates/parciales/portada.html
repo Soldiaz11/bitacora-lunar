@@ -1,0 +1,7 @@
+{% if post.imagen %}
+  <img class="portada" src="{{ post.imagen.url }}" alt="Imagen de «{{ post.titulo }}»">
+{% else %}
+  <div class="portada portada-vacia fase-{{ post.fase }}" aria-hidden="true">
+    {% include "parciales/luna.html" with fase=post.fase tam=56 %}
+  </div>
+{% endif %}

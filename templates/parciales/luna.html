@@ -1,0 +1,6 @@
+<svg class="icono-luna" viewBox="0 0 24 24" width="{{ tam|default:16 }}" height="{{ tam|default:16 }}" aria-hidden="true">
+  <circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-opacity=".55"/>
+  {% if fase == "llena" %}<circle cx="12" cy="12" r="9.5" fill="currentColor"/>
+  {% elif fase == "creciente" %}<path d="M12 2.5a9.5 9.5 0 0 1 0 19a5 9.5 0 0 0 0-19z" fill="currentColor"/>
+  {% elif fase == "menguante" %}<path d="M12 2.5a9.5 9.5 0 0 0 0 19a5 9.5 0 0 1 0-19z" fill="currentColor"/>{% endif %}
+</svg>

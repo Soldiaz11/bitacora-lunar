@@ -1,0 +1,8 @@
+<div class="meta">
+  <a class="meta-autor" href="{% url 'accounts:perfil' post.autor.username %}">
+    {% include "parciales/avatar.html" with persona=post.autor tamano="chico" %}
+    {{ post.autor.get_full_name|default:post.autor.username }}
+  </a>
+  <time datetime="{{ post.creado|date:'c' }}">{{ post.creado|date:"j \d\e F, Y" }}</time>
+  <span>{{ post.minutos_lectura }} min de lectura</span>
+</div>

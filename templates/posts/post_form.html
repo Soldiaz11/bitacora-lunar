@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Editar entrada{% else %}Nueva entrada{% endif %}{% endblock %}
+{% block content %}
+<section class="hoja">
+  <h1 class="titulo-seccion">{% if object %}Editar «{{ object.titulo }}»{% else %}Nueva entrada{% endif %}</h1>
+  <form method="post" enctype="multipart/form-data" class="formulario">
+    {% csrf_token %}
+    {% include "parciales/campos.html" %}
+    <div class="acciones">
+      <button type="submit" class="boton boton-luz">{% if object %}Guardar cambios{% else %}Publicar{% endif %}</button>
+      <a class="boton-texto" href="{% if object %}{{ object.get_absolute_url }}{% else %}{% url 'posts:list' %}{% endif %}">Cancelar</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

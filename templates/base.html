@@ -1,0 +1,57 @@
+{% load static %}<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Diario{% endblock %} | Bitácora Lunar</title>
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+<body>
+  <div class="cielo" aria-hidden="true"></div>
+
+  <header class="barra">
+    <a class="marca" href="{% url 'posts:list' %}">
+      <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><path d="M16 4a12 12 0 1 0 0 24a8 12 0 1 1 0-24z" fill="currentColor"/></svg>
+      Bitácora Lunar
+    </a>
+    <nav class="navegacion" aria-label="Principal">
+      <a href="{% url 'posts:list' %}">Diario</a>
+      <a href="{% url 'posts:acerca' %}">Acerca</a>
+      {% if user.is_authenticated %}
+        <a class="boton boton-luz" href="{% url 'posts:create' %}">Escribir</a>
+        <a class="nav-perfil" href="{% url 'accounts:mi_perfil' %}" title="Mi perfil">
+          {% include "parciales/avatar.html" with persona=user tamano="chico" %}
+        </a>
+        <form method="post" action="{% url 'accounts:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="boton-texto">Salir</button>
+        </form>
+      {% else %}
+        <a href="{% url 'accounts:login' %}">Entrar</a>
+        <a class="boton boton-luz" href="{% url 'accounts:registro' %}">Crear cuenta</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  {% if messages %}
+    <div class="avisos" role="status">
+      {% for message in messages %}
+        <p class="aviso aviso-{{ message.tags }}">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <main class="pagina">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="pie">
+    <p>Bitácora Lunar es un diario para lo que se escribe de noche.</p>
+    <p>Hecho con Django por Maximo.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ post.titulo }}{% endblock %}
+{% block content %}
+<article class="articulo">
+  <header class="articulo-cabecera">
+    <p class="etiqueta-fase">{% include "parciales/luna.html" with fase=post.fase %} Escrito en {{ post.get_fase_display|lower }}</p>
+    <h1 class="titulo-articulo">{{ post.titulo }}</h1>
+    {% if post.bajada %}<p class="articulo-bajada">{{ post.bajada }}</p>{% endif %}
+    {% include "posts/_meta.html" %}
+    {% if user == post.autor %}
+      <div class="acciones">
+        <a class="boton" href="{% url 'posts:update' post.pk %}">Editar</a>
+        <a class="boton boton-peligro" href="{% url 'posts:delete' post.pk %}">Eliminar</a>
+      </div>
+    {% endif %}
+  </header>
+
+  <div class="articulo-imagen">{% include "parciales/portada.html" %}</div>
+
+  <div class="articulo-cuerpo">{{ post.contenido|linebreaks }}</div>
+
+  {% if post.actualizado|date:"YmdHi" != post.creado|date:"YmdHi" %}
+    <p class="nota-edicion">Editado el {{ post.actualizado|date:"j \d\e F \a \l\a\s H:i" }}.</p>
+  {% endif %}
+
+  <aside class="firma">
+    {% include "parciales/avatar.html" with persona=post.autor %}
+    <div>
+      <p><a href="{% url 'accounts:perfil' post.autor.username %}">{{ post.autor.get_full_name|default:post.autor.username }}</a></p>
+      {% if post.autor.perfil.bio %}<p class="firma-bio">{{ post.autor.perfil.bio }}</p>{% endif %}
+    </div>
+  </aside>
+
+  <nav class="otras-noches" aria-label="Otras entradas">
+    {% with anterior=post.get_previous_by_creado siguiente=post.get_next_by_creado %}
+      {% if anterior %}<a href="{{ anterior.get_absolute_url }}"><small>Noche anterior</small>{{ anterior.titulo }}</a>{% else %}<span></span>{% endif %}
+      {% if siguiente %}<a class="a-derecha" href="{{ siguiente.get_absolute_url }}"><small>Noche siguiente</small>{{ siguiente.titulo }}</a>{% endif %}
+    {% endwith %}
+  </nav>
+</article>
+{% endblock %}

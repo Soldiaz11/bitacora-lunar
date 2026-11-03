@@ -41,7 +41,7 @@ Proyecto final del curso de desarrollo web con Python y Django.
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/TU-USUARIO/bitacora-lunar.git
+git clone https://github.com/soldiaz11/bitacora-lunar.git
 cd bitacora-lunar
 ```
 
@@ -150,6 +150,6 @@ bitacora-lunar/
 
 ## Autor
 
-**Maximo** — estudiante de la diplomatura en desarrollo full stack.
+**Sol Díaz**
 
-- GitHub: [@TU-USUARIO](https://github.com/TU-USUARIO)
+- GitHub: [@soldiaz11](https://github.com/soldiaz11)

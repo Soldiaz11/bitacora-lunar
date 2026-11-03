@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Crear cuenta{% endblock %}
+{% block content %}
+<section class="hoja hoja-angosta">
+  <h1 class="titulo-seccion">Crear cuenta</h1>
+  <p>Con una cuenta podés publicar entradas y tener tu propio perfil.</p>
+  <form method="post" class="formulario">
+    {% csrf_token %}
+    {% include "parciales/campos.html" %}
+    <button type="submit" class="boton boton-luz">Crear cuenta</button>
+  </form>
+  <p class="pie-formulario">¿Ya tenés cuenta? <a href="{% url 'accounts:login' %}">Entrá</a>.</p>
+</section>
+{% endblock %}

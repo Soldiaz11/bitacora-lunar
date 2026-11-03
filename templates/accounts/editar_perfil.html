@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Editar perfil{% endblock %}
+{% block content %}
+<section class="hoja">
+  <h1 class="titulo-seccion">Editar perfil</h1>
+  <form method="post" enctype="multipart/form-data" class="formulario">
+    {% csrf_token %}
+    {% include "parciales/campos.html" with form=usuario_form %}
+    {% include "parciales/campos.html" with form=perfil_form %}
+    <div class="acciones">
+      <button type="submit" class="boton boton-luz">Guardar cambios</button>
+      <a class="boton-texto" href="{% url 'accounts:mi_perfil' %}">Cancelar</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

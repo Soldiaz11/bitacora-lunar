@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ autor.username }}{% endblock %}
+{% block content %}
+<section class="perfil">
+  {% include "parciales/avatar.html" with persona=autor tamano="grande" %}
+  <div>
+    <h1 class="titulo-seccion">{{ autor.get_full_name|default:autor.username }}</h1>
+    <p class="perfil-datos">
+      <span>@{{ autor.username }}</span>
+      {% if autor.perfil.ciudad %}<span>{{ autor.perfil.ciudad }}</span>{% endif %}
+      <span>{{ posts|length }} entrada{{ posts|length|pluralize }}</span>
+    </p>
+    {% if autor.perfil.bio %}<p class="perfil-bio">{{ autor.perfil.bio }}</p>{% endif %}
+    {% if es_propio %}<a class="boton" href="{% url 'accounts:editar_perfil' %}">Editar perfil</a>{% endif %}
+  </div>
+</section>
+
+{% if posts %}
+  <ol class="lista-entradas" role="list">
+    {% for post in posts %}
+      <li class="entrada">
+        <a href="{{ post.get_absolute_url }}" class="entrada-imagen">{% include "parciales/portada.html" %}</a>
+        <div>
+          <p class="etiqueta-fase">{% include "parciales/luna.html" with fase=post.fase %} {{ post.get_fase_display }}</p>
+          <h3><a href="{{ post.get_absolute_url }}">{{ post.titulo }}</a></h3>
+          {% if post.bajada %}<p class="bajada">{{ post.bajada }}</p>{% endif %}
+          <div class="meta"><time datetime="{{ post.creado|date:'c' }}">{{ post.creado|date:"j \d\e F, Y" }}</time></div>
+        </div>
+      </li>
+    {% endfor %}
+  </ol>
+{% else %}
+  <div class="vacio">
+    {% include "parciales/luna.html" with fase="nueva" tam=48 %}
+    {% if es_propio %}
+      <h2>Todavía no escribiste ninguna entrada.</h2>
+      <a class="boton boton-luz" href="{% url 'posts:create' %}">Escribir la primera</a>
+    {% else %}
+      <h2>{{ autor.username }} todavía no publicó entradas.</h2>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}

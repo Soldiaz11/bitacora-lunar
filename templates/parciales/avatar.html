@@ -1,0 +1,1 @@
+{% if persona.perfil.avatar %}<img class="avatar avatar-{{ tamano|default:'medio' }}" src="{{ persona.perfil.avatar.url }}" alt="Foto de {{ persona.username }}">{% else %}<span class="avatar avatar-{{ tamano|default:'medio' }} avatar-inicial" aria-hidden="true">{{ persona.username|first|upper }}</span>{% endif %}

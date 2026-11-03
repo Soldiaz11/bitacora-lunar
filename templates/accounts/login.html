@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Entrar{% endblock %}
+{% block content %}
+<section class="hoja hoja-angosta">
+  <h1 class="titulo-seccion">Entrar</h1>
+  {% if next and not user.is_authenticated %}<p class="aviso aviso-info">Iniciá sesión para continuar.</p>{% endif %}
+  <form method="post" class="formulario">
+    {% csrf_token %}
+    {% include "parciales/campos.html" %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <button type="submit" class="boton boton-luz">Entrar</button>
+  </form>
+  <p class="pie-formulario">¿No tenés cuenta? <a href="{% url 'accounts:registro' %}">Creá una</a>.</p>
+</section>
+{% endblock %}

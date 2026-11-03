@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Acerca{% endblock %}
+{% block content %}
+<article class="articulo">
+  <h1 class="titulo-articulo">Un diario para la otra mitad del día.</h1>
+  <div class="articulo-cuerpo">
+    <p>Bitácora Lunar nació como proyecto final de un curso de desarrollo web con Django. La idea es simple: un lugar para escribir lo que aparece de noche, cuando la ciudad baja el volumen.</p>
+    <p>Cada entrada se guarda con la fase de la luna bajo la que fue escrita. Al crear una entrada nueva, el formulario propone la fase real de esa noche, calculada a partir del ciclo sinódico de 29,53 días. La luna de la portada también es la de hoy.</p>
+    <p>Cualquiera puede leer. Para escribir, editar o borrar tus entradas necesitás una cuenta.</p>
+  </div>
+</article>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}{% if query %}Resultados para «{{ query }}»{% else %}Diario{% endif %}{% endblock %}
+{% block content %}
+<section class="portal">
+  <div class="portal-texto">
+    <h1 class="titulo-gigante">Lo que se escribe de noche.</h1>
+    <p class="portal-bajada">Un diario compartido de insomnios, caminatas tardías y pensamientos que no aparecen de día. Cada entrada lleva la luna bajo la que fue escrita.</p>
+  </div>
+  <figure class="luna-hoy">
+    <svg viewBox="0 0 200 200" role="img" aria-label="{{ luna.nombre }}, {{ luna.iluminacion }}% iluminada">
+      <defs>
+        <radialGradient id="brillo" cx="50%" cy="50%" r="50%">
+          <stop offset="60%" stop-color="#F6E3A1" stop-opacity=".22"/>
+          <stop offset="100%" stop-color="#F6E3A1" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="superficie" cx="38%" cy="35%" r="70%">
+          <stop offset="0%" stop-color="#FFF6D6"/>
+          <stop offset="100%" stop-color="#E4CC86"/>
+        </radialGradient>
+      </defs>
+      <circle cx="100" cy="100" r="100" fill="url(#brillo)" class="halo"/>
+      <circle cx="100" cy="100" r="90" fill="#232958"/>
+      <path d="{{ luna.camino }}" fill="url(#superficie)"/>
+    </svg>
+    <figcaption><strong>{{ luna.nombre }}</strong> esta noche, {{ luna.iluminacion }}% iluminada.</figcaption>
+  </figure>
+</section>
+
+<section class="filtros" aria-label="Buscar entradas">
+  <form method="get" class="buscador" role="search">
+    <label class="oculto" for="q">Buscar por título o contenido</label>
+    <input type="search" id="q" name="q" value="{{ query }}" placeholder="Buscar por título o contenido">
+    {% if fase_activa %}<input type="hidden" name="fase" value="{{ fase_activa }}">{% endif %}
+    <button type="submit" class="boton">Buscar</button>
+  </form>
+  <div class="fases">
+    <a href="?{% if query %}q={{ query|urlencode }}{% endif %}" class="fase-chip{% if not fase_activa %} activa{% endif %}">Todas</a>
+    {% for valor, nombre in fases %}
+      <a href="?fase={{ valor }}{% if query %}&q={{ query|urlencode }}{% endif %}" class="fase-chip{% if fase_activa == valor %} activa{% endif %}">
+        {% include "parciales/luna.html" with fase=valor %} {{ nombre }}
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% if filtrando %}
+  <p class="resumen-busqueda">
+    {% if posts %}{{ page_obj.paginator.count }} entrada{{ page_obj.paginator.count|pluralize }}{% if query %} para «{{ query }}»{% endif %}.{% endif %}
+    <a href="{% url 'posts:list' %}">Ver todas</a>
+  </p>
+{% endif %}
+
+{% if posts %}
+  {% with destacada=posts.0 %}
+  <article class="destacada">
+    <a href="{{ destacada.get_absolute_url }}" class="destacada-imagen">{% include "parciales/portada.html" with post=destacada %}</a>
+    <div class="destacada-texto">
+      <p class="etiqueta-fase">{% include "parciales/luna.html" with fase=destacada.fase %} {{ destacada.get_fase_display }}</p>
+      <h2><a href="{{ destacada.get_absolute_url }}">{{ destacada.titulo }}</a></h2>
+      {% if destacada.bajada %}<p class="bajada">{{ destacada.bajada }}</p>{% endif %}
+      {% include "posts/_meta.html" with post=destacada %}
+    </div>
+  </article>
+  {% endwith %}
+
+  {% if posts|length > 1 %}
+  <ol class="lista-entradas" role="list">
+    {% for post in posts|slice:"1:" %}
+      <li class="entrada">
+        <a href="{{ post.get_absolute_url }}" class="entrada-imagen">{% include "parciales/portada.html" %}</a>
+        <div>
+          <p class="etiqueta-fase">{% include "parciales/luna.html" with fase=post.fase %} {{ post.get_fase_display }}</p>
+          <h3><a href="{{ post.get_absolute_url }}">{{ post.titulo }}</a></h3>
+          {% if post.bajada %}<p class="bajada">{{ post.bajada }}</p>{% endif %}
+          {% include "posts/_meta.html" %}
+        </div>
+      </li>
+    {% endfor %}
+  </ol>
+  {% endif %}
+
+  {% if is_paginated %}
+  <nav class="paginacion" aria-label="Páginas">
+    {% if page_obj.has_previous %}<a class="boton" href="?page={{ page_obj.previous_page_number }}{% if parametros %}&{{ parametros }}{% endif %}">Más recientes</a>{% else %}<span></span>{% endif %}
+    <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a class="boton" href="?page={{ page_obj.next_page_number }}{% if parametros %}&{{ parametros }}{% endif %}">Más antiguas</a>{% else %}<span></span>{% endif %}
+  </nav>
+  {% endif %}
+{% else %}
+  <div class="vacio">
+    {% include "parciales/luna.html" with fase="nueva" tam=48 %}
+    {% if filtrando %}
+      <h2>No hay entradas que coincidan{% if query %} con «{{ query }}»{% endif %}.</h2>
+      <p>Probá con otra palabra o quitá el filtro de fase.</p>
+      <a class="boton" href="{% url 'posts:list' %}">Ver todas las entradas</a>
+    {% else %}
+      <h2>Todavía no hay entradas.</h2>
+      {% if user.is_authenticated %}
+        <a class="boton boton-luz" href="{% url 'posts:create' %}">Escribir la primera</a>
+      {% else %}
+        <p><a href="{% url 'accounts:registro' %}">Creá una cuenta</a> para escribir la primera.</p>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}
